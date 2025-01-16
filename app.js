@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = procesd.rnv.PORT || 3000;
+const port = 3000;
 
 // endpoint, middleware(s)
 app.get('/', function (req, res) {
@@ -9,4 +9,4 @@ app.get('/', function (req, res) {
 
 app.listen(port, ()=> console.log(`server is running on... ${port}`
         )
-    );
+    )
