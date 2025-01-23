@@ -28,7 +28,7 @@ app.get('/saveMyNameGet', (req, res)=>{
 })
 
 app.get('/ejs', function (req, res) {
-    res.render(' words', {pageTitle : 'my cool ejs page'});
+    res.render('words', {pageTitle : 'my cool ejs page'});
 })
 
 app.get('/nodemon', function (req, res) {
