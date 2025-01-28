@@ -1,13 +1,13 @@
 const express = require('express')
 require('dotenv').config()
 const app = express()
-// const port = process.env.PORT || 3000;
-const port = 3000;
+const port = process.env.PORT || 3000;
+//const port = 3000;
 const bodyParser = require('body-parser')
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = process.env.MOGNGO_URI;
+const uri = process.env.MONGO_URI;
 
-// console.log(uri);
+console.log(uri);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended : true}));
@@ -37,7 +37,7 @@ async function run() {
 }
 run().catch(console.dir);
 
-// endpoint, middleware(s)
+// endpoint, ? historymiddleware(s)
 app.get('/', function (req, res) {
     res.sendFile('index.html')
 })
