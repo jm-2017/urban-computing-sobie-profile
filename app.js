@@ -35,9 +35,38 @@ async function run() {
     await client.close();
   }
 }
-run().catch(console.dir);
+// run().catch(console.dir);
 
-// endpoint, ? historymiddleware(s)
+// jan 30 2025 code
+async function getData() {
+  await client.connect();
+  let collection = await client.db("janet-app-database").collection( "janet-app-data");
+
+  // let collection = await db.collection("posts");
+
+  let results = await collection.find({}).toArray();
+
+  // .limit(50)
+  // .toArray();
+
+  console.log(results);
+
+  //res.send(results).status(200);
+
+  //getData();
+  return results;
+}
+
+app.get('/read', async function(req, res) {
+  let getDataResults = await getData();
+  console.log(getDataResults);
+  res.send(getDataResults);
+})
+//   res.send('data',
+//   {data : getDataResults});
+// })
+
+// endpoint, ? middleware(s)
 app.get('/', function (req, res) {
     res.sendFile('index.html')
 })
@@ -67,7 +96,6 @@ app.get('/ejs', function (req, res) {
 app.get('/nodemon', function (req, res) {
     res.send('no kill');
 })
-
 
 app.get('/helloRender', function (req, res) {
     res.send('Hello Express from Real World<br><a href="/">back to home</a>')
