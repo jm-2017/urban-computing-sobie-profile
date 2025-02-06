@@ -6,8 +6,8 @@ const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser')
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = process.env.MONGO_URI;
-
-console.log(uri);
+// cpmmented out on 2 6 2025
+//console.log(uri);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended : true}));
@@ -37,7 +37,8 @@ async function run() {
 }
 // run().catch(console.dir);
 
-// jan 30 2025 code
+
+
 async function getData() {
   await client.connect();
   let collection = await client.db("janet-app-database").collection( "janet-app-data");
@@ -46,25 +47,34 @@ async function getData() {
 
   let results = await collection.find({}).toArray();
 
-  // .limit(50)
-  // .toArray();
-
   console.log(results);
-
-  //res.send(results).status(200);
-
-  //getData();
   return results;
 }
+
+app.get('/insert', async(req, res) => {
+  console.log('in /insert');
+
+  let newData = req.query.myName;
+  // connect to db
+  await client.connect();
+  // point to the collection
+  await client
+  .db("janet-app-database")
+  .collection("janet-app-data")
+  .insertOne({song : newData})
+
+  res.redirect('/read')
+})
 
 app.get('/read', async function(req, res) {
   let getDataResults = await getData();
   console.log(getDataResults);
-  res.send(getDataResults);
+  // res.send(getDataResults);
+  res.render('data',
+    {newData : getDataResults}
+  );
 })
-//   res.send('data',
-//   {data : getDataResults});
-// })
+
 
 // endpoint, ? middleware(s)
 app.get('/', function (req, res) {
@@ -73,10 +83,8 @@ app.get('/', function (req, res) {
 
 app.post('/saveMyName', (req, res)=>{
     console.log('did we hit the endpoint?');
-    console.log(req.query);
+    console.log(req.body);
    // res.redirect('/ejs');
-   // console.log('req.params: ', req.params);
-    let reqName = req.query.myNameGet;
     res.render('words', 
     {pageTitle : req.body.myName});
     // the following line does not work w my code ? =>
@@ -85,8 +93,12 @@ app.post('/saveMyName', (req, res)=>{
 
 app.get('/saveMyNameGet', (req, res)=>{
     console.log('did we hit the endpoint?');
-    console.log(req.query);
-    res.redirect('/ejs');
+    console.log('req.query: ', req.query);
+    let reqName = req.query.myNameGet;
+    //res.redirect('/ejs');
+    res.render('words', 
+      {pageTitle: reqName}
+    );
 })
 
 app.get('/ejs', function (req, res) {
