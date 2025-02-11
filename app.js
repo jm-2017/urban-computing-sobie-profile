@@ -1,13 +1,12 @@
 const express = require('express')
 require('dotenv').config()
+const shajs = require('sha.js')
 const app = express()
 const port = process.env.PORT || 3000;
-//const port = 3000;
 const bodyParser = require('body-parser')
+const { ObjectId } = require('mongodb') 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = process.env.MONGO_URI;
-// cpmmented out on 2 6 2025
-//console.log(uri);
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended : true}));
@@ -23,95 +22,51 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}
-// run().catch(console.dir);
-
-
-
-async function getData() {
-  await client.connect();
-  let collection = await client.db("janet-app-database").collection( "janet-app-data");
-
-  // let collection = await db.collection("posts");
-
-  let results = await collection.find({}).toArray();
-
-  console.log(results);
-  return results;
+const mongoCollection = client.db("janetSobieProfile").collection("janetSobieBlog")
+function initProfileData() {
+  mongoCollection.insertOne({
+    title:"this is a blog title",
+    post :"this is the post"
+  });
 }
 
-app.get('/insert', async(req, res) => {
-  console.log('in /insert');
-
-  let newData = req.query.myName;
-  // connect to db
-  await client.connect();
-  // point to the collection
-  await client
-  .db("janet-app-database")
-  .collection("janet-app-data")
-  .insertOne({song : newData})
-
-  res.redirect('/read')
+app.get('/', async function (req, res) {
+  let results = await mongoCollection.find({}).toArray();
+  res.render('profile',
+    {profileData : results} );
 })
 
-app.get('/read', async function(req, res) {
-  let getDataResults = await getData();
-  console.log(getDataResults);
-  // res.send(getDataResults);
-  res.render('data',
-    {newData : getDataResults}
-  );
-})
+app.post('/insert', async (req, res)=> {
+  let results = await mongoCollection.insertOne({
+    title : req.body.title,
+    post : req.body.post
+  });
+  res.redirect('/');
+});
 
-
-// endpoint, ? middleware(s)
-app.get('/', function (req, res) {
-    res.sendFile('index.html')
-})
-
-app.post('/saveMyName', (req, res)=>{
-    console.log('did we hit the endpoint?');
-    console.log(req.body);
-   // res.redirect('/ejs');
-    res.render('words', 
-    {pageTitle : req.body.myName});
-    // the following line does not work w my code ? =>
-    //{pageTitle: reqName});
-})
-
-app.get('/saveMyNameGet', (req, res)=>{
-    console.log('did we hit the endpoint?');
-    console.log('req.query: ', req.query);
-    let reqName = req.query.myNameGet;
-    //res.redirect('/ejs');
-    res.render('words', 
-      {pageTitle: reqName}
-    );
-})
-
-app.get('/ejs', function (req, res) {
-    res.render('words', {pageTitle : 'my cool ejs page'});
-})
-
-app.get('/nodemon', function (req, res) {
-    res.send('no kill');
-})
-
-app.get('/helloRender', function (req, res) {
-    res.send('Hello Express from Real World<br><a href="/">back to home</a>')
+app.post('/delete', async function (req, res) {
+  let result = await mongoCollection.findOneAndDelete(
+    {
+      "_id" : new ObjectId(req.body.deleteId)
+    }
+  ).then(result => {
+    res.redirect('/');
   })
+});
 
-app.listen(port, ()=> console.log(`server is running on... ${port}`
-));
+app.post('/update', async (req, res)=>{
+  let result = await mongoCollection.findOneAndReplace(
+    {_id: ObjectId.createFromHexString(req.body.updateId)}, {
+      $set:
+      {
+        title : req.body.updateTitle,
+        post : req.body.updatePost
+      }
+    }
+  ).then(result => {
+    console.log(result);
+    res.redirect('/');
+  })
+});
+
+app.listen(port, ()=> console.log(`server is running on...localhost${port}`));
