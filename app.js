@@ -22,7 +22,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-const mongoCollection = client.db("janetSobieProfile").collection("janetSobieBlog")
+const mongoCollection = client.db("janet'sSobieProfile").collection("janetSobieBlog")
 function initProfileData() {
   mongoCollection.insertOne({
     title:"this is a blog title",
