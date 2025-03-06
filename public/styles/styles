@@ -6,16 +6,65 @@ body {
   background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="36" height="72" viewBox="0 0 36 72"%3E%3Cg fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M2 6h12L8 18 2 6zm18 36h12l-6 12-6-12z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
 }
 
+.main{
+  margin: 50px;
+  background-color: pink;
+  border: 5px solid PaleVioletRed; 
+}
+
 li {
   font-family: "Ubuntu Mono", monospace;
   font-weight: 400;
   font-style: normal;
 }
+
 .center {
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+h1{
+  color : rgb(0, 0, 128);
+  font-size : 40px;
+  font-family : "Courier New", monospace;
+  font-weight : bold;
+  text-align : center;
+  }
+
+p{ 
+  font-family: "Courier New", monospace; 
+  font-weight : bold;
+  font-size: 20px; 
+  color : darkblue;
+  } 
+  
+  
+h2 {
+  color : Navy;
+  font-size : 25px;
+  font-family : "Courier New", monospace;
+  font-weight : bold;
+  }
+
+h3 {
+  color : PaleVioletRed;
+  font-size : 17px;
+  font-family : "Courier New", monospace;
+  font-weight : bold;
+}
+
+body {
+  background-color: thistle;
+}
+
+footer {
+  display : block;
+  clear : both;
+  background-color : pink;
+  text-align : center;
+  padding : 25px;
 }
 
 /* use # to prefix css selector for dom/html element id attribute */
