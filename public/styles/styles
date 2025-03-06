@@ -11,6 +11,12 @@ li {
   font-weight: 400;
   font-style: normal;
 }
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
 
 /* use # to prefix css selector for dom/html element id attribute */
 #songList {
